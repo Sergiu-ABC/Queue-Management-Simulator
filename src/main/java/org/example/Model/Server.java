@@ -5,15 +5,16 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Server implements Runnable {
-    private BlockingQueue<Client> clients;
+    private BlockingQueue<Task> clients;
     private AtomicInteger waitingPeriod;
+    private volatile boolean isRunning = true;
 
     public Server() {
         this.clients = new LinkedBlockingQueue<>();
         this.waitingPeriod = new AtomicInteger(0);
     }
 
-    public void addClient(Client newClient) {
+    public void addClient(Task newClient) {
         clients.add(newClient);
         waitingPeriod.addAndGet(newClient.getServiceTime());
     }
@@ -22,24 +23,34 @@ public class Server implements Runnable {
         return waitingPeriod.get();
     }
 
-    public Client[] getClients() {
-        Client[] currentClients = new Client[clients.size()];
-        clients.toArray(currentClients);
-        return currentClients;
+    public Task[] getClients() {
+        Task[] currentClients = new Task[clients.size()];
+        return clients.toArray(currentClients);
+    }
+
+    public void stopServer() {
+        this.isRunning = false;
     }
 
     @Override
     public void run() {
-        while (true) {
+        while (isRunning) {
             try {
-                Client currentClient = clients.take();
+                Task currentClient = clients.peek();
 
+                if (currentClient != null) {
+                    Thread.sleep(1000);
 
+                    currentClient.setServiceTime(currentClient.getServiceTime() - 1);
+                    waitingPeriod.decrementAndGet();
 
-                waitingPeriod.addAndGet(-currentClient.getServiceTime());
-
+                    if (currentClient.getServiceTime() <= 0) {
+                        clients.take();
+                    }
+                } else {
+                    Thread.sleep(100);
+                }
             } catch (InterruptedException e) {
-
                 Thread.currentThread().interrupt();
                 break;
             }

@@ -1,0 +1,17 @@
+package org.example.BusinessLogic;
+import org.example.Model.Task;
+import org.example.Model.Server;
+import java.util.List;
+
+public class ConcreteStrategyTime implements Strategy {
+    @Override
+    public void addTask(List<Server> servers, Task client) {
+        Server shortestQueue = servers.get(0);
+        for (Server server : servers) {
+            if (server.getWaitingPeriod() < shortestQueue.getWaitingPeriod()) {
+                shortestQueue = server;
+            }
+        }
+        shortestQueue.addClient(client);
+    }
+}
