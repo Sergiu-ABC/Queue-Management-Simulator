@@ -1,10 +1,13 @@
 package org.example.BusinessLogic;
+
 import org.example.Model.Task;
 import org.example.Model.Server;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -23,12 +26,10 @@ public class SimulationManager implements Runnable {
     private List<Task> generatedClients;
     private SimulationObserver observer;
 
-
     private int totalWaitTime = 0;
     private int totalServiceTime = 0;
     private int peakHour = 0;
     private int maxClientsAtPeak = 0;
-
 
     public SimulationManager(int n, int q, int tMax, int minArr, int maxArr, int minServ, int maxServ, SelectionPolicy policy) {
         this.numberOfClients = n;
@@ -79,7 +80,11 @@ public class SimulationManager implements Runnable {
     public void run() {
         int currentTime = 0;
 
-        try (PrintWriter writer = new PrintWriter(new FileWriter("log_of_events.txt"))) {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
+        String timestamp = dtf.format(LocalDateTime.now());
+        String fileName = "log_of_events_" + timestamp + ".txt";
+
+        try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
 
             while (currentTime <= timeLimit) {
 
@@ -87,15 +92,12 @@ public class SimulationManager implements Runnable {
                 while (iterator.hasNext()) {
                     Task c = iterator.next();
                     if (c.getArrivalTime() <= currentTime) {
-
                         totalWaitTime += scheduler.dispatchClient(c);
                         iterator.remove();
                     }
                 }
 
-
                 logMessage(writer, "Time " + currentTime);
-
 
                 StringBuilder waitingStr = new StringBuilder("Waiting clients: ");
                 for (Task c : generatedClients) {
@@ -103,13 +105,10 @@ public class SimulationManager implements Runnable {
                 }
                 logMessage(writer, waitingStr.toString());
 
-
                 boolean allServersEmpty = true;
                 int currentTotalClientsInQueues = 0;
 
                 for (int i = 0; i < scheduler.getServers().size(); i++) {
-
-
                     Server s = scheduler.getServers().get(i);
                     Task[] clientsInQueue = s.getClients();
 
@@ -127,7 +126,6 @@ public class SimulationManager implements Runnable {
                     logMessage(writer, queueStr.toString());
                 }
 
-
                 if (currentTotalClientsInQueues > maxClientsAtPeak) {
                     maxClientsAtPeak = currentTotalClientsInQueues;
                     peakHour = currentTime;
@@ -135,16 +133,13 @@ public class SimulationManager implements Runnable {
 
                 logMessage(writer, "--------------------------------------------------");
 
-
                 if (generatedClients.isEmpty() && allServersEmpty) {
                     break;
                 }
 
-
                 currentTime++;
                 Thread.sleep(1000);
             }
-
 
             double averageWaitTime = (double) totalWaitTime / numberOfClients;
             double averageServiceTime = (double) totalServiceTime / numberOfClients;
