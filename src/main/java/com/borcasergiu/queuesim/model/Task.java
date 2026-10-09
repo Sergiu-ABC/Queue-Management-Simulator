@@ -1,4 +1,4 @@
-package org.example.Model;
+package com.borcasergiu.queuesim.model;
 
 public class Task implements Comparable<Task> {
     private int id;

@@ -1,6 +1,6 @@
-package org.example.GUI;
-import org.example.BusinessLogic.SimulationManager;
-import org.example.BusinessLogic.SelectionPolicy;
+package com.borcasergiu.queuesim.gui;
+import com.borcasergiu.queuesim.logic.SimulationManager;
+import com.borcasergiu.queuesim.logic.SelectionPolicy;
 
 public class Controller {
     private Viewer viewer;

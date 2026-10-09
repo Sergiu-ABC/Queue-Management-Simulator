@@ -1,7 +1,7 @@
-package org.example.BusinessLogic;
+package com.borcasergiu.queuesim.logic;
 
-import org.example.Model.Task;
-import org.example.Model.Server;
+import com.borcasergiu.queuesim.model.Task;
+import com.borcasergiu.queuesim.model.Server;
 import java.util.List;
 
 public class ConcreteStrategyQueue implements Strategy {

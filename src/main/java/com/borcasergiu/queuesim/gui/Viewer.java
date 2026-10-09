@@ -1,6 +1,6 @@
-package org.example.GUI;
+package com.borcasergiu.queuesim.gui;
 
-import org.example.BusinessLogic.SimulationObserver;
+import com.borcasergiu.queuesim.logic.SimulationObserver;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,4 +1,4 @@
-package org.example.BusinessLogic;
+package com.borcasergiu.queuesim.logic;
 
 public interface SimulationObserver {
     void updateLog(String message);

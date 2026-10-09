@@ -1,6 +1,6 @@
-package org.example.BusinessLogic;
-import org.example.Model.Task;
-import org.example.Model.Server;
+package com.borcasergiu.queuesim.logic;
+import com.borcasergiu.queuesim.model.Task;
+import com.borcasergiu.queuesim.model.Server;
 import java.util.List;
 
 public class ConcreteStrategyTime implements Strategy {

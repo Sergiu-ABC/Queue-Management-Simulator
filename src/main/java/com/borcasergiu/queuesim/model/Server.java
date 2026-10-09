@@ -1,4 +1,4 @@
-package org.example.Model;
+package com.borcasergiu.queuesim.model;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
